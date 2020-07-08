@@ -1,0 +1,69 @@
+<?php
+class Usuario {
+    private $idusuario;
+    private $deslogin;
+    private $senha;
+    private $dtCadastro;
+
+    //GETS
+
+    public function getIdusuario(){
+        return $this->idusuario;
+    }
+    public function getDeslogin(){
+        return $this->deslogin;
+    }
+    public function getSenha(){
+        return $this->senha;
+    }
+    public function getDtcastro(){
+        return $this->dtCadastro;
+    }
+
+
+    //SETS
+
+    public function setIdusuario($idusuario){
+        $this->idusuario = $idusuario;
+    }
+    public function setDeslogin($deslogin){
+        $this->deslogin = $deslogin;
+    }
+    public function setSenha($senha){
+        $this->senha = $senha;
+    }
+    public function setDtcadastro($dtCadastro){
+        $this->dtCadastro = $dtCadastro;
+    }
+
+    //METODOS
+
+    public function loadById($id){
+        
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(":ID" => $id));
+
+        if (count($results) > 0) {
+            $row = $results[0];
+
+            $this->setIdusuario($row['idusuario']);
+            $this->setDeslogin($row['deslogin']);
+            $this->setSenha($row['senha']);
+            $this->setDtcadastro(new DateTime($row['dtcadastro']));
+        }
+
+    }
+
+    public function __toString()
+    {
+        return json_encode(array(
+            "idusario"=>$this->getIdusuario(),
+            "deslogin"=>$this->getDeslogin(),
+            "senha"=>$this->getSenha(),
+            "dtcadastro"=>$this->getDtcastro()->format("d/m/Y H:i:s")
+        ));
+    }
+}
+
+?>
